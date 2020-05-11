@@ -16,7 +16,7 @@ public class FileShredderListener extends JobExecutionListenerSupport {
 	public void afterJob(JobExecution jobExecution) {
 		if (jobExecution.getStatus() == BatchStatus.COMPLETED) {
 			LOG.info("******************************************************************************");
-			LOG.info("!!! JOB FINISHED! Time to verify the results");
+			LOG.info(jobExecution.toString());
 			LOG.info("******************************************************************************");
 		}
 	}

@@ -1,7 +1,11 @@
 package com.example.fileshredder.step.reader;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
@@ -9,43 +13,36 @@ import org.springframework.batch.item.UnexpectedInputException;
 import org.springframework.stereotype.Component;
 
 @Component
-public class FileShredderReader implements ItemReader<File[]> {
+public class FileShredderReader implements ItemReader<List<File>> {
+
+	private static final Logger LOG = LoggerFactory.getLogger(FileShredderReader.class);
+
+	private List<File> arrayList = new ArrayList<>();
 
 	@Override
-	public File[] read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
-		File diretorio = new File("D:\\file-shredder");
-		File[] files = null;
+	public List<File> read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
+		String pattern = ".*txt";
+		File directory = new File("D:\\file-shredder");
+		List<File> files = new ArrayList<>();
 
-		if (diretorio.isDirectory()) {
-			files = diretorio.listFiles();
-
-			return files;
-		}
-
-		return null;
+		return search(pattern, directory, files);
 	}
 
-	// private static final Logger LOG =
-	// LoggerFactory.getLogger(FolderReader.class);
+	public List<File> search(final String pattern, final File directory, List<?> files) {
+		for (final File f : directory.listFiles()) {
+			if (f.isDirectory()) {
+				search(pattern, f, files);
+			}
 
-	/*
-	 * @Override public List<Path> read() throws Exception,
-	 * UnexpectedInputException, ParseException, NonTransientResourceException {
-	 * List<Path> files = FileShredderReader.listFiles("D:\\file-shredder"); return
-	 * files; }
-	 * 
-	 * public static List<Path> listFiles(String dir) throws IOException {
-	 * List<Path> fileList = new ArrayList<>();
-	 * 
-	 * Files.walkFileTree(Paths.get(dir), new SimpleFileVisitor<Path>() {
-	 * 
-	 * @Override public FileVisitResult visitFile(Path file, BasicFileAttributes
-	 * attrs) throws IOException { if (!Files.isDirectory(file)) {
-	 * fileList.add(file); }
-	 * 
-	 * return FileVisitResult.CONTINUE; } });
-	 * 
-	 * return fileList; }
-	 */
+			if (f.isFile()) {
+				if (f.getName().matches(pattern)) {
+					arrayList.add(f);
+					LOG.info("File [" + f.toString() + "]");
+				}
+			}
+		}
+		
+		return arrayList;
+	}
 
 }

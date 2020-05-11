@@ -8,19 +8,26 @@ import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.stereotype.Component;
 
-@Component
-public class FileShredderWriter implements ItemWriter<File[]> {
+import com.example.fileshredder.step.reader.FileShredderReader;
 
-	private static final Logger LOG = LoggerFactory.getLogger(FileShredderWriter.class);
+@Component
+public class FileShredderWriter implements ItemWriter<List<File>> {
+
+	private static final Logger LOG = LoggerFactory.getLogger(FileShredderReader.class);
 
 	@Override
-	public void write(List<? extends File[]> files) throws Exception {
+	public void write(List<? extends List<File>> files) throws Exception {
 		try {
-			if (files != null && files.length > 0) {
-				for (File file : files) {
-					file.delete();
+			if (files != null && !files.isEmpty()) {
+				for (List<File> listFile : files) {
+					for (File file : listFile) {
+						file.delete();
+						LOG.info("Deleted file :: " + file);
+					}
 				}
 			}
+			
+			LOG.info("Erro ao interromper o processo.");
 
 		} catch (Exception e) {
 			e.printStackTrace();

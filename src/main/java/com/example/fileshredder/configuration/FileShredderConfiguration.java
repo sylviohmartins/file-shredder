@@ -1,6 +1,7 @@
 package com.example.fileshredder.configuration;
 
 import java.io.File;
+import java.util.List;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -40,7 +41,7 @@ public class FileShredderConfiguration {
 	public Step step1() {
 		return stepBuilderFactory
 				.get("step1")
-				.<File[], File[]>chunk(1)
+				.<List<File>, List<File>>chunk(1)
 				.reader(reader)
 				//.processor(processor)
 				.writer(writer)
