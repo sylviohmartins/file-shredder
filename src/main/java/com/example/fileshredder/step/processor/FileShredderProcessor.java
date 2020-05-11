@@ -7,7 +7,7 @@ import java.util.List;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class FileShredderProcessor implements ItemProcessor<List<Path>, List<Path>> {
 
 	// private static final Logger LOG =

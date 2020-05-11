@@ -1,7 +1,6 @@
 package com.example.fileshredder.configuration;
 
-import java.nio.file.Path;
-import java.util.List;
+import java.io.File;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -14,7 +13,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.example.fileshredder.listener.FileShredderListener;
-import com.example.fileshredder.step.processor.FileShredderProcessor;
 import com.example.fileshredder.step.reader.FileShredderReader;
 import com.example.fileshredder.step.writer.FileShredderWriter;
 
@@ -32,8 +30,8 @@ public class FileShredderConfiguration {
 	@Autowired
 	private FileShredderReader reader;
 
-	@Autowired
-	private FileShredderProcessor processor;
+	/*@Autowired
+	private FileShredderProcessor processor;*/
 
 	@Autowired
 	private FileShredderWriter writer;
@@ -42,9 +40,9 @@ public class FileShredderConfiguration {
 	public Step step1() {
 		return stepBuilderFactory
 				.get("step1")
-				.<List<Path>, List<Path>>chunk(1)
+				.<File[], File[]>chunk(1)
 				.reader(reader)
-				.processor(processor)
+				//.processor(processor)
 				.writer(writer)
 				.build();
 	}
